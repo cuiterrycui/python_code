@@ -10,6 +10,11 @@ import os
 import requests
 from lxml import html
 import csv
+import sys
+
+reload(sys)
+
+sys.setdefaultencoding('utf8')
 
 headers = {
 #    'Host': 'www.nusil.com',
@@ -41,7 +46,7 @@ def save_image(image_url):
     save(page, filename)
 
 
-def crawl(url,filename):
+def crawl(url,filename,writer2):
     resp = requests.get(url)
     page = resp.content
 #    f = open(filename+'.html', 'w+')
@@ -80,11 +85,8 @@ def crawl(url,filename):
     
     dic={"Product":filename,"Description":medium5columns.text_content(),"Applications":medium7columns.text_content(),"Properties":propertiestable.text_content().strip().replace(' ','')
 }   
-    csvFile3 = open('csvFile.csv','w') 
-    writer2 = csv.writer(csvFile3)
     for key in dic:
         writer2.writerow([key, dic[key]])
-    csvFile3.close() 
     
     
     
@@ -104,15 +106,16 @@ def crawlfile():
 #    print(len(product_table))    
 #    print(product_table)
     
+    csvFile3 = open('csvFile.csv','w') 
+    writer2 = csv.writer(csvFile3)
     for product in product_table:
         ahref =product.find(".//a") 
 #        print(len(ahref))
         url = ahref.attrib     
         print(ahref.text_content())
         print(url['href'])
-        crawl(url['href'],ahref.text_content().strip())
-
-    
+        crawl(url['href'],ahref.text_content().strip(),writer2) 
+    csvFile3.close() 
     
    
    
