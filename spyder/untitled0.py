@@ -72,8 +72,15 @@ def crawl(url,filename,writer2):
 #    print(medium7columns.text_content())  
     
     propertiestable =   propertiesrow.find(".//table[@class='properties-table']")
-#    print(propertiestable.text_content().strip().replace(' ','').replace('\n',':'))  
-    print(propertiestable.text_content().strip().replace(' ',''))     
+#    print(propertiestable.text_content().strip().replace(' ','').replace('\n',':'))    
+    propertystr = propertiestable.text_content().strip().replace(' ','')
+    print(propertystr)
+     
+    propertystr= propertystr.strip().replace('\r\n\r\n\r\n',';')
+    propertystr= propertystr.strip().replace('\r\n',' ')
+    print("propertystr:")
+
+    print(propertystr) 
     
 
 #    medium-5 columns
@@ -81,10 +88,10 @@ def crawl(url,filename,writer2):
     print(medium5columns.text_content())
     
     medium7columns   = pagecontent.find(".//div[@class='medium-7 columns']")  
-    print(medium7columns.text_content())  
+    print(medium7columns.text_content())
+
     
-    dic={"Product":filename,"Description":medium5columns.text_content(),"Applications":medium7columns.text_content(),"Properties":propertiestable.text_content().strip().replace(' ','')
-}   
+    dic={"Product":filename,"Description":medium5columns.text_content(),"Applications":medium7columns.text_content(),"Properties":propertystr}   
     for key in dic:
         writer2.writerow([key, dic[key]])
     
@@ -114,7 +121,7 @@ def crawlfile():
         url = ahref.attrib     
         print(ahref.text_content())
         print(url['href'])
-        crawl(url['href'],ahref.text_content().strip(),writer2) 
+        crawl(url['href'],ahref.text_content().strip(),writer2)
     csvFile3.close() 
     
    
